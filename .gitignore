@@ -25,12 +25,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.vercel
 
 # macOS
 .DS_Store
 
-# Ignore large media
+# ignore any large audio library folder if re-added
 public/audios/
-public/**/*.m4a
-public/**/*.mp3
