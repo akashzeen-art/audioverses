@@ -5,41 +5,38 @@ export default function TermsPage() {
       <Header />
       <div className="max-w-4xl mx-auto mt-8 sm:mt-10 space-y-4 sm:space-y-6">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#FFD369]">Terms & Conditions</h1>
-        <p className="text-sm sm:text-base text-[#EAEAEA]/80 leading-relaxed">
-          Welcome to Audio Verses. By accessing or using our platform, you agree to the following terms and conditions.
-          Please read them carefully.
+        <p className="text-sm sm:text-base text-[#EAEAEA]/80 leading-relaxed font-medium">
+          By clicking on Subscribe, you agree to the below terms and conditions:
         </p>
 
-        <h2 className="text-xl sm:text-2xl font-semibold mt-4 sm:mt-6">1. Use of Service</h2>
-        <p className="text-sm sm:text-base text-[#EAEAEA]/70 leading-relaxed">
-          You agree to use our audiobooks only for personal, non-commercial purposes and in compliance with all
-          applicable laws.
-        </p>
+        <ul className="space-y-4 sm:space-y-5 text-sm sm:text-base text-[#EAEAEA]/80 leading-relaxed list-none">
+          <li className="flex gap-3">
+            <span className="text-[#FFD369] mt-1 shrink-0">•</span>
+            <span>You will start the paid subscription after the free period automatically.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-[#FFD369] mt-1 shrink-0">•</span>
+            <span>No commitment—you can cancel your subscription at any time.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-[#FFD369] mt-1 shrink-0">•</span>
+            <span>The free trial is valid only for new subscribers.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-[#FFD369] mt-1 shrink-0">•</span>
+            <span>Enjoy your free trial for 24 hours.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-[#FFD369] mt-1 shrink-0">•</span>
+            <span>Please make sure that your browser is not using any 3rd-party blocking technologies and you have a healthy internet connection for swift access to the content.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-[#FFD369] mt-1 shrink-0">•</span>
+            <span>By proceeding, you are accepting all Terms and Conditions of the service and agree to receive updates about your subscription on your registered mobile number.</span>
+          </li>
+        </ul>
 
-        <h2 className="text-xl sm:text-2xl font-semibold mt-4 sm:mt-6">2. Accounts</h2>
-        <p className="text-sm sm:text-base text-[#EAEAEA]/70 leading-relaxed">
-          You are responsible for maintaining the confidentiality of your account and password and for all activities
-          under your account.
-        </p>
-
-        <h2 className="text-xl sm:text-2xl font-semibold mt-4 sm:mt-6">3. Intellectual Property</h2>
-        <p className="text-sm sm:text-base text-[#EAEAEA]/70 leading-relaxed">
-          All audiobooks, voices, and platform content remain the property of Audio Verses and may not be reproduced or
-          redistributed.
-        </p>
-
-        <h2 className="text-xl sm:text-2xl font-semibold mt-4 sm:mt-6">4. Termination</h2>
-        <p className="text-sm sm:text-base text-[#EAEAEA]/70 leading-relaxed">
-          We reserve the right to suspend or terminate your account if you violate these terms.
-        </p>
-
-        <h2 className="text-xl sm:text-2xl font-semibold mt-4 sm:mt-6">5. Changes to Terms</h2>
-        <p className="text-sm sm:text-base text-[#EAEAEA]/70 leading-relaxed">
-          We may update these terms at any time. Continued use of our service after changes means you accept the new
-          terms.
-        </p>
-
-        <p className="mt-6 sm:mt-8 text-xs sm:text-sm text-[#EAEAEA]/60">Last updated: August 2024</p>
+        <p className="mt-6 sm:mt-8 text-xs sm:text-sm text-[#EAEAEA]/60">Last updated: March 2025</p>
       </div>
     </div>
   )

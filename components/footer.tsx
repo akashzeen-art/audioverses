@@ -19,6 +19,12 @@ export function Footer() {
           <p className="text-[#EAEAEA]/70 text-sm leading-relaxed">
             Transform your reading experience with AI-powered audio verses. Premium quality, unlimited access, and voices that bring stories to life.
           </p>
+          <Link
+            href="/terms"
+            className="inline-block text-sm text-[#FFD369] hover:text-[#FFD369]/80 underline underline-offset-2 transition-colors mt-2"
+          >
+            Terms & Conditions
+          </Link>
         </div>
       </div>
     </footer>
