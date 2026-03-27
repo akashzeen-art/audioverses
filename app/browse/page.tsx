@@ -346,6 +346,7 @@ function BrowsePageContent() {
   const [bookDurations, setBookDurations] = useState<Map<number, number>>(new Map())
   const audioRef = useRef<HTMLAudioElement>(null)
   const isPlayingRef = useRef(false)
+  const rafRef = useRef<number | null>(null)
 
   // Prefill slider duration when metadata is missing
   useEffect(() => {
@@ -692,12 +693,16 @@ function BrowsePageContent() {
     fetchDurations()
   }, [])
 
-  // Update current time
+  // Keep duration/currentTime in sync with real player state
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
 
-    const updateTime = () => setCurrentTime(audio.currentTime)
+    const updateTime = () => {
+      if (!Number.isFinite(audio.currentTime) || audio.currentTime < 0) return
+      setCurrentTime(audio.currentTime)
+    }
+
     const setAudioDuration = () => {
       if (Number.isFinite(audio.duration) && audio.duration > 0) {
         setDuration(audio.duration)
@@ -712,12 +717,51 @@ function BrowsePageContent() {
       }
     }
 
+    const tick = () => {
+      if (!audio.paused && !audio.ended) {
+        updateTime()
+        rafRef.current = requestAnimationFrame(tick)
+      } else if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+    }
+
+    const handlePlay = () => {
+      updateTime()
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(tick)
+      }
+    }
+
+    const stopTicking = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+      updateTime()
+    }
+
     audio.addEventListener("timeupdate", updateTime)
     audio.addEventListener("loadedmetadata", setAudioDuration)
+    audio.addEventListener("durationchange", setAudioDuration)
+    audio.addEventListener("seeked", updateTime)
+    audio.addEventListener("play", handlePlay)
+    audio.addEventListener("pause", stopTicking)
+    audio.addEventListener("ended", stopTicking)
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime)
       audio.removeEventListener("loadedmetadata", setAudioDuration)
+      audio.removeEventListener("durationchange", setAudioDuration)
+      audio.removeEventListener("seeked", updateTime)
+      audio.removeEventListener("play", handlePlay)
+      audio.removeEventListener("pause", stopTicking)
+      audio.removeEventListener("ended", stopTicking)
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
     }
   }, [currentBook])
 
@@ -727,6 +771,19 @@ function BrowsePageContent() {
       setCurrentTime(Number(e.target.value))
     }
   }
+
+  const activeDuration = (() => {
+    if (duration && Number.isFinite(duration) && duration > 0) return duration
+    if (currentBook) {
+      const accurateDuration = bookDurations.get(currentBook.id)
+      if (accurateDuration && accurateDuration > 0) return accurateDuration
+      if (currentBook.durationSeconds && currentBook.durationSeconds > 0) return currentBook.durationSeconds
+      return Math.max(parseDurationToSeconds(currentBook.duration), 1)
+    }
+    return 1
+  })()
+
+  const clampedCurrentTime = Math.min(Math.max(currentTime || 0, 0), activeDuration)
 
   // Filter books by category and search query
   const filteredBooks = allAudioContent.filter((book) => {
@@ -1121,42 +1178,13 @@ function BrowsePageContent() {
             <input
               type="range"
               min={0}
-              max={
-                (() => {
-                  if (duration && Number.isFinite(duration) && duration > 0) {
-                    return duration
-                  }
-                  const accurateDuration = bookDurations.get(currentBook.id)
-                  if (accurateDuration && accurateDuration > 0) {
-                    return accurateDuration
-                  }
-                  if (currentBook.durationSeconds && currentBook.durationSeconds > 0) {
-                    return currentBook.durationSeconds
-                  }
-                  return Math.max(parseDurationToSeconds(currentBook.duration), 1)
-                })()
-              }
-              value={currentTime}
+              max={activeDuration}
+              value={clampedCurrentTime}
               onChange={handleSeek}
               className="flex-1 md:w-64"
             />
             <span className="text-[#EAEAEA]/70 text-xs sm:text-sm whitespace-nowrap flex-shrink-0">
-              {formatHHMMSS(currentTime)} /{" "}
-              {formatHHMMSS(
-                (() => {
-                  if (duration && Number.isFinite(duration) && duration > 0) {
-                    return duration
-                  }
-                  const accurateDuration = bookDurations.get(currentBook.id)
-                  if (accurateDuration && accurateDuration > 0) {
-                    return accurateDuration
-                  }
-                  if (currentBook.durationSeconds && currentBook.durationSeconds > 0) {
-                    return currentBook.durationSeconds
-                  }
-                  return parseDurationToSeconds(currentBook.duration)
-                })()
-              )}
+              {formatHHMMSS(clampedCurrentTime)} / {formatHHMMSS(activeDuration)}
             </span>
           </div>
         </div>
