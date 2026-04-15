@@ -10,7 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Search, Clock, Star, Play, Pause, Languages, X } from "lucide-react"
 import frenchAudio from "@/lib/french-audio.json"
 import arabicAudio from "@/lib/arabic-audio.json"
+import portugueseAudio from "@/lib/portuguese-audio.json"
+import polishAudio from "@/lib/polish-audio.json"
+import czechAudio from "@/lib/czech-audio.json"
 import categoryMapping from "@/lib/category-mapping.json"
+import PortugueseSection from "@/components/PortugueseSection"
+import PolishSection from "@/components/PolishSection"
+import CzechSection from "@/components/CzechSection"
 
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
@@ -37,12 +43,15 @@ function BrowsePageContent() {
     "All",
     "French",
     "Arabic",
+    "Portuguese",
+    "Polish",
+    "Czech",
     "Fiction","Non-Fiction","Mystery","Romance","Sci-Fi","Biography",
     "Self-Help","Business","History","Fantasy","Thriller","Children",
     "Travel","Sports","Science","Home","Health","Education","Computer",
   ]
   const fillerCategories = categories.filter(
-    (category) => !["All", "French", "Arabic"].includes(category)
+    (category) => !["All", "French", "Arabic", "Portuguese", "Polish", "Czech"].includes(category)
   )
 
   const defaultAudio = ""
@@ -328,10 +337,13 @@ function BrowsePageContent() {
   })
 
   // Combine all audio content
-  // ID ranges: French (1000-1999), Arabic (2000-2999), Category Books (3000-3999), Additional (10000+)
+  // ID ranges: French (1000-1999), Arabic (2000-2999), Portuguese (4000-4999), Polish (6000-6999), Czech (7000-7999), Category Books (3000-3999), Additional (10000+)
   const allAudioContent: Book[] = [
     ...frenchAudio.map(audio => ({ ...audio, id: audio.id + 1000 })),
     ...arabicAudio.map(audio => ({ ...audio, id: audio.id + 2000 })),
+    ...portugueseAudio.map(audio => ({ ...audio, id: audio.id + 4000 })),
+    ...polishAudio.map(audio => ({ ...audio, id: audio.id + 6000 })),
+    ...czechAudio.map(audio => ({ ...audio, id: audio.id + 7000 })),
     ...categoryBooks,
     ...additionalBooks.map((book, i) => ({ ...book, id: 10000 + i + 1 }))
   ]
@@ -809,11 +821,10 @@ function BrowsePageContent() {
       categoryToMatch = matchedCategory
     }
     
-    const matchesCategory = 
-      categoryToMatch === "All" || 
+    const matchesCategory =
+      categoryToMatch === "All" ||
       book.category?.toLowerCase() === categoryToMatch.toLowerCase() ||
-      (categoryToMatch === "French" && book.language?.toLowerCase() === "french") ||
-      (categoryToMatch === "Arabic" && book.language?.toLowerCase() === "arabic")
+      book.language?.toLowerCase() === categoryToMatch.toLowerCase()
     
     // Search filter (searches in title, author, description, category, and language)
     const matchesSearch = !hasSearchQuery || (() => {
@@ -921,15 +932,10 @@ function BrowsePageContent() {
               Language Categories
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="bg-[#3A3A55]/30 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:bg-[#3A3A55]/50 transition-all duration-300 cursor-pointer" onClick={() => {
-                setSelectedCategory("French")
-                router.push("/browse?category=French")
-              }}>
+              <div className="bg-[#3A3A55]/30 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:bg-[#3A3A55]/50 transition-all duration-300 cursor-pointer" onClick={() => { setSelectedCategory("French"); router.push("/browse?category=French") }}>
                 <div className="flex items-center justify-between mb-3 sm:mb-4 flex-wrap gap-2">
                   <h3 className="text-lg sm:text-xl font-bold text-[#EAEAEA]">French Audio</h3>
-                  <div className="bg-[#FFD369] text-[#1E1E2F] px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
-                    {frenchAudio.length} titles
-                  </div>
+                  <div className="bg-[#FFD369] text-[#1E1E2F] px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">{frenchAudio.length} titles</div>
                 </div>
                 <p className="text-[#EAEAEA]/70 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">Discover French literature and culture through our curated collection of French audio verses</p>
                 <div className="flex items-center text-[#EAEAEA]/60 text-xs sm:text-sm flex-wrap">
@@ -937,16 +943,10 @@ function BrowsePageContent() {
                   <span className="truncate">Total: {frenchAudio.reduce((acc, audio) => acc + parseDurationToHours(audio.durationSeconds ?? audio.duration), 0).toFixed(1)}h of content</span>
                 </div>
               </div>
-              
-              <div className="bg-[#3A3A55]/30 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:bg-[#3A3A55]/50 transition-all duration-300 cursor-pointer" onClick={() => {
-                setSelectedCategory("Arabic")
-                router.push("/browse?category=Arabic")
-              }}>
+              <div className="bg-[#3A3A55]/30 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:bg-[#3A3A55]/50 transition-all duration-300 cursor-pointer" onClick={() => { setSelectedCategory("Arabic"); router.push("/browse?category=Arabic") }}>
                 <div className="flex items-center justify-between mb-3 sm:mb-4 flex-wrap gap-2">
                   <h3 className="text-lg sm:text-xl font-bold text-[#EAEAEA]">Arabic Audio</h3>
-                  <div className="bg-[#FFD369] text-[#1E1E2F] px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
-                    {arabicAudio.length} titles
-                  </div>
+                  <div className="bg-[#FFD369] text-[#1E1E2F] px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">{arabicAudio.length} titles</div>
                 </div>
                 <p className="text-[#EAEAEA]/70 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">Explore Arabic literature, poetry, and cultural heritage through our Arabic audio verse collection</p>
                 <div className="flex items-center text-[#EAEAEA]/60 text-xs sm:text-sm flex-wrap">
@@ -954,6 +954,9 @@ function BrowsePageContent() {
                   <span className="truncate">Total: {arabicAudio.reduce((acc, audio) => acc + parseDurationToHours(audio.durationSeconds ?? audio.duration), 0).toFixed(1)}h of content</span>
                 </div>
               </div>
+              <PortugueseSection onClick={() => { setSelectedCategory("Portuguese"); router.push("/browse?category=Portuguese") }} />
+              <PolishSection onClick={() => { setSelectedCategory("Polish"); router.push("/browse?category=Polish") }} />
+              <CzechSection onClick={() => { setSelectedCategory("Czech"); router.push("/browse?category=Czech") }} />
             </div>
 
             <div className="text-center mt-4 sm:mt-6">

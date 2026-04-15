@@ -7,6 +7,9 @@ const languages = [
   { code: "en", name: "English", flag: "🇺🇸", nativeName: "English" },
   { code: "fr", name: "Français", flag: "🇫🇷", nativeName: "Français" },
   { code: "ar", name: "العربية", flag: "🇸🇦", nativeName: "العربية" },
+  { code: "pt", name: "Português", flag: "🇧🇷", nativeName: "Português" },
+  { code: "pl", name: "Polski", flag: "🇵🇱", nativeName: "Polski" },
+  { code: "cs", name: "Čeština", flag: "🇨🇿", nativeName: "Čeština" },
 ];
 
 const setTranslationCookies = (targetLanguage: string | null) => {
